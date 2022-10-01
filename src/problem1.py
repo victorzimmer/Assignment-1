@@ -24,6 +24,19 @@ def tuneTheta(theta, x, y, learningRate, iterations, PRINT = False):
     return theta
 
 
+def predictDataset(ds, theta):
+    # print(ds)
+    # For y-values we will use the zeroth (first) column of the provided data
+    ys = ds.iloc[:,0]
+    # print(ys)
+    # For x-values we'll use columns one (second) thru nine (tenth)
+    xs = ds.iloc[:, [1,2,3,4,5,7,8,9]]
+    # Inserts a 0th column in the dataset filled with ones, this is for theta_0 as the bias
+    xs.insert(0, 0, np.ones(len(xs)), True)
+
+    # print(xs)
+
+    return rs(theta, xs)
 
 
 def learnDataset(ds, learningRate, iterations, PRINT = False):
@@ -68,13 +81,44 @@ print('Dataset is of length: '+str(len(dataset)))
 # Basic usage is 
 # learnDataset(dataset, 0.0002, 250)
 # which will learn from the provided dataset, using the provided learnRate and iterations, and return proper theta values.
-learnDataset(dataset, 0.0002, 250, True)
+# learnDataset(dataset, 0.0002, 250, True)
 # TODO: In the future I'd like to implement a function that automatically determines a proper learnRate and number of iterations by analyzing the cost delta.
 
 
 
 
-# TODO: Implement leave-one-out cross-validation
+# Implementation of leave-one-out cross-validation
+# We need to train models on datasets from the original dataset, but with a single row of data left out as validation
+# This will be done N times to get a prediction for all values
+
+def loocv():
+    # First we initalize a list to store out predictions
+    predictions = []
+
+    # Then we loop thru the range of the dataset
+    for l in range(0, len(dataset)):
+    # for l in range(0, 2):
+        # For each row we want to use it as validation
+
+        # Select row l as validationData, drop the rest
+        trainingList = list(range(0,len(dataset)))
+        trainingList.remove(l)
+        validationData = dataset.drop(trainingList)
+
+        # Select row all rows except l as trainingData, drop l
+        trainingData = dataset.drop(l)
+
+        # Train model using training data
+        th = learnDataset(trainingData, 0.00025, 250, False)
+
+        # Predict validation using model
+        p = predictDataset(validationData, th)
+        
+        print("["+str(l)+"] Prediction: "+str(p[l])+", Ground truth: "+str(validationData[0][l]))
+        predictions.append({"p": p[l], "t": validationData[0][l]})
+    return predictions
+
+loocv()
 
 
 # TODO: Implement plotting to show results
