@@ -1,3 +1,5 @@
+from tkinter import Label
+from matplotlib.pyplot import plot
 import numpy as np
 import pandas as pd
 
@@ -10,7 +12,7 @@ def rs(theta, x):
 def cost(theta, x, y):
     return np.sum((rs(theta, x) - y)**2)/(2*len(y))
 
-# Returns improved theta values by applying gradient descent, that is slowly modifying the theta values based on partial differentiation
+# Returns improved theta values by applying gradient descent, that is slowly modifying the theta values based on the partial differentiation
 def tuneTheta(theta, x, y, learningRate, iterations, PRINT = False):
     for i in range(0, iterations):
         if (PRINT):
@@ -73,13 +75,18 @@ FILENAME = '../Resources/spotify_data.csv'
 dataset = pd.read_csv(FILENAME, header=None)
 
 
+# Normalizes the data in the x columns.
+xColumns = [1,2,3,4,5,6,7,8,9]
+dataset[xColumns] = dataset[xColumns] / dataset[xColumns].abs().max()
+
+
 print('Imported dataset from file: '+FILENAME)
 print('Dataset is of length: '+str(len(dataset)))
 
 # Basic usage is 
 # learnDataset(dataset, 0.0002, 250)
 # which will learn from the provided dataset, using the provided learnRate and iterations, and return proper theta values.
-# learnDataset(dataset, 0.0002, 250, True)
+# learnDataset(dataset, 0.5, 500, True)
 # TODO: In the future I'd like to implement a function that automatically determines a proper learnRate and number of iterations by analyzing the cost delta.
 
 
@@ -91,7 +98,7 @@ print('Dataset is of length: '+str(len(dataset)))
 
 def loocv(learningRate, iterations):
     # First we initalize a list to store out predictions
-    predictions = {"i": [], "p": [], "t": []}
+    predictions = {"i": [], "p": [], "t": [], "e": [], "t_2": [], "e_2": []}
 
     # Then we loop thru the range of the dataset
     for l in range(0, len(dataset)):
@@ -117,6 +124,10 @@ def loocv(learningRate, iterations):
         predictions['i'].append(l)
         predictions['p'].append(p[l])
         predictions['t'].append(validationData[0][l])
+        predictions['e'].append(np.abs(p[l]-validationData[0][l]))
+
+        predictions['t_2'].append(validationData[0][l]**2)
+        predictions['e_2'].append((p[l]-validationData[0][l])**2)
     return predictions
 
 
@@ -124,10 +135,31 @@ def loocv(learningRate, iterations):
 
 # Implementation of plotting data
 # TODO: Plotting should be separated from calculation of data to make it easier to compute data, save it, then plot it multiple times
-import matplotlib.pyplot as plt
-plotData = loocv(0.00025, 400)
+def plotData():
+    import matplotlib.pyplot as plt
+    plotData = loocv(0.75, 50)
 
-plt.scatter(plotData['i'], plotData['p'])
-plt.scatter(plotData['i'], plotData['t'])
+    plt.scatter(plotData['i'], plotData['p'], label='predicted')
+    plt.scatter(plotData['i'], plotData['t'], label='ground truth')
 
-plt.show()
+    plt.hist(plotData['e'], label='error')
+
+    # Compute the RMSE
+    RMSE = np.sqrt( np.sum(plotData['e'])**2 / len(plotData['i']) )
+    print("RMSE :" + str(RMSE))
+
+    # Compute R^2: dividing explained variation by total variation
+    mean_y = np.mean(plotData['t'])
+    # r_squared = 1 - ( np.sum(plotData['e_2']) / np.sum(plotData['t_2']) )
+    print(np.sum(plotData['e_2']))
+    print(np.sum((np.array(plotData['t']) - mean_y)**2))
+    r_squared = 1 - (np.sum(plotData['e_2']) / np.sum((np.array(plotData['t']) - mean_y)**2))
+    print("R^2 :" + str(r_squared))
+
+    plt.xlabel('Song Index')
+    plt.ylabel('Song Popularity')
+    plt.title('Multivariate Linear Regression testing. RMSE = '+ str(round(RMSE*10)/10) + ". R^2 = "+ str(round(r_squared*10)/10) +".")
+    plt.legend()
+    plt.show()
+
+plotData()
