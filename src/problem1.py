@@ -112,7 +112,7 @@ def loocv(learningRate, iterations):
         # Predict validation using model
         p = predictDataset(validationData, th)
         
-        print("["+str(l)+"] Prediction: "+str(p[l])+", Ground truth: "+str(validationData[0][l]))
+        print("["+str(l)+"/"+str(len(dataset))+"] Prediction: "+str(p[l])+", Ground truth: "+str(validationData[0][l]))
 
         predictions['i'].append(l)
         predictions['p'].append(p[l])
