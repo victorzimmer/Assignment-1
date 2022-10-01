@@ -137,7 +137,7 @@ def loocv(learningRate, iterations):
 # TODO: Plotting should be separated from calculation of data to make it easier to compute data, save it, then plot it multiple times
 def plotData():
     import matplotlib.pyplot as plt
-    plotData = loocv(0.75, 50)
+    plotData = loocv(0.75, 200)
 
     plt.scatter(plotData['i'], plotData['p'], label='predicted')
     plt.scatter(plotData['i'], plotData['t'], label='ground truth')
