@@ -8,8 +8,6 @@
 
 ## Problem 1
 
-### Task 1
-
 With the standard model $r = f(x) + \epsilon,$
 
 Multivariate linear regression starts from a very simple basis with the equation for any given line $y = mx + n$ where $y$ is a dependent variable of the independent variable $x$ and $mx + n$ defines a line in 2D space. For this line $n$ is the intersect with the y-axis, that is the value of $y$ at $x=0$, and $mx$ represents the rate $m$ in relation to the change in $x$.
