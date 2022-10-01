@@ -8,7 +8,7 @@
 
 ## Problem 1
 
-### Task 1a
+### Task 1
 
 With the standard model $r = f(x) + \epsilon,$
 
@@ -33,7 +33,35 @@ This requires a differentiation of our cost function with respect to a \theta_k 
 
 #### Implementation
 
-In this implementation of multivariate linear regression $\vec{\theta}$ will be a vector $\begin{bmatrix} \theta_0 \\ \theta_1 \\ \theta_2 \\ ... \\ \theta_K \end{bmatrix}$ and $\vec{x}$ will be the vector $\begin{bmatrix} 1 \\ x_0 \\ x_1 \\ ... \\ x_K \end{bmatrix}$, that way computing any predicted $\hat{y}$ will be the scalar product of the two vectors.
+I implemented this in three phases. 
+
+**First phase** was the implementation of the above math as code in the functions `rs, cost, tuneTheta, predictDataset, learnDataset`
+
+`rs(theta, x)` simply uses the given theta values and x values to make predictions for a y-value, this is done by multiplying together the theta and x-values and summing them. It is this function $g(x|\theta)$ gives us $g(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + ... + \theta_K x_K$ with an $x_0$ implemented as $x_0 = 1$ for convinience.  
+
+`cost(theta, x, y)` calculates the cost of a given set of theta values. It is this function $C(\theta) = \frac{1}{2K}\sum{(\hat{y}_k - y_k)^2}$.
+
+`tuneTheta(theta, x, y, learningRate, iterations)` runs a given amount of iterations attempting to nudge the values for theta according to $\theta_k = \theta_k - \alpha \frac{d}{d \theta_k}C(\theta_k) = \frac{1}{K}\sum{(\hat{y}_k - y_k)x_k}$. The value for $\alpha$ is given by the learning rate.
+
+`predictDataset(dataset, theta)` is implemented as a utility for further code, but it returns a prediction for a y, using `rs()`, given theta values and a dataset. The goal is for it to accept a dataset similar to `learnDataset`.
+
+`learnDataset(dataset, learningRate, iterations)` takes in an entire dataset and uses the provided learning rate and iteration count to run the functions above to optimize theta values. It initializes theta as random numbers between zero and one, any number could be used, but using random numbers allow for rerunning the algorithm to potentially result in a better (or worse) model. It then returns the optimized theta values.
+
+
+**Second phase** was the implementation of the leave-one-out cross-validation which is implemented in the `loocv(learningRate, iterations)` function. It allows for setting the number of iterations and learning rate, and then it uses the read dataset. It iteratively splits the dataset into a validation set containing one row from the original dataset and a training set containing the rest, then it train a model using the training set before using this model to predict the value in the validation set (the one left out). It returns a dictionary containing the data from its run.
+
+**Third phase** was the implementation of plotting and statistical numbers for the model. The plotting is done in `plotData()` which uses `loocv()` to run the model(s), and then uses *matplotlib* to plot the data with a scatter plot for both the predicted and true data, a histogram for the errors, and a title with the RMSE and R^2
+
+*Figure 1*
+
+![Figure 1](./Figure_1.png)
+
+
+After implementing the third phase I decided to normalize the x-values in the dataset as the predictions was quite bad. Normalization helped, probably because it equalizes the effect of all $x_i$, but still the model(s) are far from perfect. In figure 1 we can see the result of a run before normalization, with $R^2 << 0$ telling us that its far worse than a simply the mean of the data. In figure 2, which is with normalization, this has improved considerably, however we still have $R^2 < 0$ telling us the model is slightly worse than the mean.
+
+*Figure 2*
+
+![Figure 2](./Figure_2.png)
 
 
 
@@ -46,9 +74,7 @@ In this implementation of multivariate linear regression $\vec{\theta}$ will be 
 
 
 
-
-
-
+<!-- # Other stuff
 
 
 
@@ -78,4 +104,4 @@ Regression line
 
 ### Task 1b
 
-The learnable parameters are $\theta$, they define the slope and intersect of the regression line.
+The learnable parameters are $\theta$, they define the slope and intersect of the regression line. -->
