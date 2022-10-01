@@ -1,5 +1,3 @@
-from code import interact
-from matplotlib.pyplot import yscale
 import numpy as np
 import pandas as pd
 
@@ -91,9 +89,9 @@ print('Dataset is of length: '+str(len(dataset)))
 # We need to train models on datasets from the original dataset, but with a single row of data left out as validation
 # This will be done N times to get a prediction for all values
 
-def loocv():
+def loocv(learningRate, iterations):
     # First we initalize a list to store out predictions
-    predictions = []
+    predictions = {"i": [], "p": [], "t": []}
 
     # Then we loop thru the range of the dataset
     for l in range(0, len(dataset)):
@@ -109,16 +107,27 @@ def loocv():
         trainingData = dataset.drop(l)
 
         # Train model using training data
-        th = learnDataset(trainingData, 0.00025, 250, False)
+        th = learnDataset(trainingData, learningRate, iterations, False)
 
         # Predict validation using model
         p = predictDataset(validationData, th)
         
         print("["+str(l)+"] Prediction: "+str(p[l])+", Ground truth: "+str(validationData[0][l]))
-        predictions.append({"p": p[l], "t": validationData[0][l]})
+
+        predictions['i'].append(l)
+        predictions['p'].append(p[l])
+        predictions['t'].append(validationData[0][l])
     return predictions
 
-loocv()
 
 
-# TODO: Implement plotting to show results
+
+# Implementation of plotting data
+# TODO: Plotting should be separated from calculation of data to make it easier to compute data, save it, then plot it multiple times
+import matplotlib.pyplot as plt
+plotData = loocv(0.00025, 400)
+
+plt.scatter(plotData['i'], plotData['p'])
+plt.scatter(plotData['i'], plotData['t'])
+
+plt.show()
