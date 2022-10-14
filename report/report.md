@@ -1,6 +1,6 @@
 # Assignment 1
 ## FYS-2021 Machine Learning H22
-### Victor Zimmer, victor.zimmer@uit.no, vzi002
+<!-- ### Victor Zimmer, victor.zimmer@uit.no, vzi002 -->
 
 
 <br />
@@ -8,7 +8,7 @@
 
 ## Problem 1
 
-With the standard model $r = f(x) + \epsilon,$
+With the standard model $r = f(x) + \epsilon$
 
 Multivariate linear regression starts from a very simple basis with the equation for any given line $y = mx + n$ where $y$ is a dependent variable of the independent variable $x$ and $mx + n$ defines a line in 2D space. For this line $n$ is the intersect with the y-axis, that is the value of $y$ at $x=0$, and $mx$ represents the rate $m$ in relation to the change in $x$.
 
@@ -103,3 +103,24 @@ Regression line
 ### Task 1b
 
 The learnable parameters are $\theta$, they define the slope and intersect of the regression line. -->
+
+
+
+
+## Problem 2
+
+### Task a
+
+$\hat{\mu}$
+
+Likelihood function $L(\mu, x) = \prod_{t=1}^{n_1}{ \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2} (\frac{x_1^t-\mu}{\sigma})^2 } }$
+
+Maximum likelihood $\hat{\mu} = max L()$
+
+An optimization for the likelihood function will also optimize the log-likelihood.
+ 
+The log likelihood converts the product to a sum $l(\mu, x) =\sum_{t=1}^{n_1}{[-\ln{\sqrt{2\pi}\sigma} - \frac{1}{2}(\frac{x_1^t-\mu}{\sigma})^2]} = - n_1 \ln{\sqrt{2\pi}\sigma} - \frac{1}{2} \sum_{t=1}^{n_1}{(\frac{x_1^t-\mu}{\sigma})^2}$
+
+Differentiation with respect to $\mu$ gives $\frac{\delta}{\delta\mu} l(\mu, x) = \frac{1}{\sigma}\sum_{t=1}^{n_1}{(\frac{x_1^t-\mu}{\sigma})}$
+
+We set this to zero $\frac{1}{\sigma}\sum_{t=1}^{n_1}{(\frac{x_1^t-\mu}{\sigma})} = 0$ giving us $\hat{\mu} = \frac{1}{n_1} \sum_{t=1}^{n_1}{x_1^t}$
