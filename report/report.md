@@ -16,11 +16,11 @@ From this simple basis univariate linear regression is easily derived to find a 
 
 Univariate linear regression can relative easily be tuned to fit the trend of a given dataset, for example using the least squares method.
 
-In the model $r = f(x) + \epsilon,$ this is extended to multivariate linear regression. Our estimate function $g(x|\theta)$ gives us $g(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + ... + \theta_K x_K$ where $K$ is the length of our variable set. \theta_0 gets a special name with it being our *bias*. \epsilon represents external variables that are not caught by our model.
+In the model $r = f(x) + \epsilon,$ this is extended to multivariate linear regression. Our estimate function $g(x|\theta)$ gives us $g(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + ... + \theta_K x_K$ where $K$ is the length of our variable set. $\theta_0$ gets a special name with it being our *bias*. $\epsilon$ represents external variables that are not caught by our model.
 
-We begin by initializing \theta with random values, which gives a poor regression, and then tuning that such that the regression improves. With enough steps this should give a better, and maybe even satisfactory, regression. 
+We begin by initializing $\theta$ with random values, which gives a poor regression, and then tuning that such that the regression improves. With enough steps this should give a better, and maybe even satisfactory, regression. 
 
-To be able to tune \theta we need a measure of the error from the desired output, for the given dataset, this is done with a *cost function*. This looks a lot like a multivariate extension of the least squares method, with the cost function defined as $C(\theta) = \frac{1}{2K}\sum{(\hat{y}_k - y_k)^2}$. 
+To be able to tune $\theta$ we need a measure of the error from the desired output, for the given dataset, this is done with a *cost function*. This looks a lot like a multivariate extension of the least squares method, with the cost function defined as $C(\theta) = \frac{1}{2K}\sum{(\hat{y}_k - y_k)^2}$. 
 
 The cost function simply subtracts the true output from the estimated output and squares it removing negativity, this is averaged for the dataset to give a measure of the error for a given input and output.
 
